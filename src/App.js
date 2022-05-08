@@ -1,4 +1,4 @@
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { Button, Layout } from "antd";
 import PrivateRoute from "./components/Routes/PrivateRoutes/PrivateRoute";
 import HomePage from "./components/Pages/HomePage/HomePage";
@@ -10,6 +10,10 @@ const { Header, Footer } = Layout;
 
 function App() {
   const navigate = useNavigate();
+  const location = useLocation();
+  console.log("location", location.pathname);
+  const isHomepage = location.pathname === "/homepage";
+
   const onClickLogout = () => {
     sessionStorage.removeItem("userLogged");
     navigate("/");
@@ -17,9 +21,11 @@ function App() {
   return (
     <Layout>
       <Header>
-        <Button title="Logout" type="primary" onClick={onClickLogout}>
-          Logout
-        </Button>
+        {isHomepage && (
+          <Button title="Logout" type="primary" onClick={onClickLogout}>
+            Logout
+          </Button>
+        )}
       </Header>
       <Routes>
         <Route index element={<LoginPage />}></Route>
