@@ -1,7 +1,12 @@
+import LoginCard from "../../LoginCard/LoginCard";
 import "./style.scss";
 
 const LoginPage = () => {
-  return <h1>LoginPage</h1>;
+  return (
+    <div className="loginPage-container">
+      <LoginCard />
+    </div>
+  );
 };
 
 export default LoginPage;

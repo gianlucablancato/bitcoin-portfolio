@@ -4,9 +4,11 @@ import LoginPage from "./components/Pages/LoginPage/LoginPage";
 
 import NotFound from "./components/Pages/404/NotFound";
 import { Layout } from "antd";
-import axios from "axios";
-import "./App.css";
 import HomePage from "./components/Pages/HomePage/HomePage";
+import PrivateRoute from "./components/Routes/PrivateRoutes/PrivateRoute";
+
+import axios from "axios";
+import "./App.scss";
 
 const { Header, Footer } = Layout;
 
@@ -22,7 +24,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route index element={<LoginPage />}></Route>
-          <Route path="/homepage" element={<HomePage />}></Route>
+          <Route element={<PrivateRoute />}>
+            <Route path="/homepage" element={<HomePage />}></Route>
+          </Route>
           <Route path="*" element={<NotFound />}></Route>
         </Routes>
       </BrowserRouter>
