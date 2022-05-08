@@ -1,15 +1,4 @@
-import {
-  Form,
-  Input,
-  Button,
-  Checkbox,
-  Card,
-  Select,
-  InputNumber,
-  Space,
-  Col,
-  Row,
-} from "antd";
+import { Form, Button, Card, Select, InputNumber, Col, Row } from "antd";
 import axios from "axios";
 import { useRef, useState } from "react";
 import "./style.scss";
@@ -24,7 +13,7 @@ const BuySellCard = ({ currencies }) => {
 
   const basePath = "https://blockchain.info/tobtc?&cors=true&";
   const maxValue = curr === "BTC" ? totalBtc : null;
-  const precision = curr == "BTC" ? 8 : 2;
+  const precision = curr === "BTC" ? 8 : 2;
   const isCurrBtc = curr === "BTC";
 
   const onFinish = async (datas) => {
