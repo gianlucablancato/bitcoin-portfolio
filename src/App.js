@@ -1,23 +1,15 @@
-import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LoginPage from "./components/Pages/LoginPage/LoginPage";
 
-import NotFound from "./components/Pages/404/NotFound";
-import { Layout } from "antd";
-import HomePage from "./components/Pages/HomePage/HomePage";
-import PrivateRoute from "./components/Routes/PrivateRoutes/PrivateRoute";
-
-import axios from "axios";
 import "./App.scss";
 
+import { Layout } from "antd";
+import PrivateRoute from "./components/Routes/PrivateRoutes/PrivateRoute";
+import HomePage from "./components/Pages/HomePage/HomePage";
+import LoginPage from "./components/Pages/LoginPage/LoginPage";
+import NotFound from "./components/Pages/404/NotFound";
 const { Header, Footer } = Layout;
 
 function App() {
-  useEffect(() => {
-    const getData = axios.get("https://blockchain.info/ticker").then((res) => {
-      console.log(res);
-    });
-  }, []);
   return (
     <Layout>
       <Header>Header</Header>
