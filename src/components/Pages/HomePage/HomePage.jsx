@@ -25,12 +25,12 @@ const HomePage = () => {
   return (
     <div className="homepage-container">
       <Row className="row-homepage">
-        <Col span={24}>
+        <Col>
           <h1>Welcome {name}</h1>
         </Col>
       </Row>
       <Row className="row-homepage">
-        <Col span={12} className="buySell-card-container">
+        <Col className="buySell-card-container">
           <BuySellCard currencies={currencies} />
         </Col>
       </Row>
