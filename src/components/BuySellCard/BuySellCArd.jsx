@@ -1,4 +1,16 @@
-import { Form, Input, Button, Checkbox, Card, Select, InputNumber } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Checkbox,
+  Card,
+  Select,
+  InputNumber,
+  Space,
+  Col,
+  Row,
+} from "antd";
+import axios from "axios";
 import { useRef, useState } from "react";
 import "./style.scss";
 
@@ -6,22 +18,44 @@ const { Option } = Select;
 
 const BuySellCard = ({ currencies }) => {
   const [totalBtc, setTotalBtc] = useState(2.5);
-  const [curr, setCurr] = useState("BTC");
-  const [buyDisabled, setBuyDisabled] = useState(false);
+  const [curr, setCurr] = useState(undefined);
+
   const formRef = useRef();
 
-  const isBtcSelected = curr === "BTC" || buyDisabled;
-  const isSellDisabled = totalBtc <= 0 || !isBtcSelected;
-  const maxValue = isBtcSelected ? totalBtc : null;
-  const onFinish = (values) => {
-    console.log("Success:", values);
+  const basePath = "https://blockchain.info/tobtc?&cors=true&";
+  const maxValue = curr === "BTC" ? totalBtc : null;
+  const precision = curr == "BTC" ? 8 : 2;
+  const isCurrBtc = curr === "BTC";
+
+  const onFinish = async (datas) => {
+    let total = totalBtc;
+    if (datas.currency === "BTC") {
+      onSellBtc(datas, total);
+    } else {
+      onBuyBtc(datas, total);
+    }
+    formRef.current.resetFields();
+    setCurr(undefined);
   };
 
   function onChange(curr) {
     setCurr(curr);
     formRef.current.setFieldsValue({ value: "" });
-    setBuyDisabled(true);
   }
+
+  const onBuyBtc = async (datas, total) => {
+    const searchParams = new URLSearchParams(datas);
+    const data = await axios
+      .get(`${basePath}${searchParams}`.toString())
+      .then((r) => {
+        setTotalBtc(Number((total += r.data)));
+      });
+  };
+
+  const onSellBtc = async (datas, total) => {
+    const res = datas.value < totalBtc ? (total -= datas.value) : 0;
+    setTotalBtc(res);
+  };
 
   return (
     <Card title="Buy or sell your BTC" style={{ width: 400 }}>
@@ -32,6 +66,7 @@ const BuySellCard = ({ currencies }) => {
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         onFinish={onFinish}
+        initialValues={{ value: "" }}
       >
         <Form.Item
           label="currency"
@@ -41,7 +76,6 @@ const BuySellCard = ({ currencies }) => {
           <Select
             showSearch
             placeholder="Choose currency..."
-            defaultValue={curr}
             onChange={onChange}
           >
             <Option value="BTC">BTC</Option>
@@ -60,30 +94,29 @@ const BuySellCard = ({ currencies }) => {
           <InputNumber
             min={1}
             max={maxValue}
-            precision={2}
-            onChange={() => setBuyDisabled(false)}
+            precision={precision}
+            disabled={isCurrBtc && totalBtc === 0}
           />
         </Form.Item>
-        <div className="btn-container">
-          <Form.Item>
-            <Button
-              type="primary"
-              style={{ margin: "1rem" }}
-              disabled={isBtcSelected}
-              htmlType="submit"
-            >
-              Buy
-            </Button>
-            <Button
-              danger
-              style={{ margin: "1rem" }}
-              disabled={isSellDisabled}
-              htmlType="submit"
-            >
-              Sell
-            </Button>
-          </Form.Item>
-        </div>
+
+        <Form.Item className="btn-container">
+          <Row>
+            <Col span={8}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                disabled={!curr || isCurrBtc}
+              >
+                Buy
+              </Button>
+            </Col>
+            <Col span={8}>
+              <Button danger htmlType="submit" disabled={!isCurrBtc}>
+                Sell
+              </Button>
+            </Col>
+          </Row>
+        </Form.Item>
       </Form>
     </Card>
   );

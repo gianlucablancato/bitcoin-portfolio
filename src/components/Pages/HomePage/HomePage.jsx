@@ -11,11 +11,10 @@ const HomePage = () => {
   const name = JSON.parse(userLogged).username;
 
   const currencies = dailyValues && Object.keys(dailyValues.data);
+  const path = "https://blockchain.info/ticker";
 
   const getDailyQuotation = async () => {
-    const data = await axios
-      .get("https://blockchain.info/ticker")
-      .then((r) => setDailyValues(r));
+    const data = await axios.get(path).then((r) => setDailyValues(r));
   };
 
   useEffect(() => {
